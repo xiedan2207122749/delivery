@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxyj.delivery.app.dao.CommodityDao">
+
+    <select id="pageCommodity" resultType="com.jxyj.delivery.sys.vo.CommodityVO">
+        select
+            tc.id, tc.name, tc.price, tc.introduce_image, tt.value typeValue, tc.remark, tc.unit, su.username creatorUsername, tc.create_time, tc.type_id, tc.status
+        from tb_commodity tc
+        join sys_user su on tc.creator_user_id = su.id
+        join tb_type tt on tc.type_id = tt.id
+        <where>
+            tc.deleted = 0
+            <if test="form.name != null and form.name.trim() != ''">
+                and tc.name like concat('%', #{form.name}, '%')
+            </if>
+        </where>
+        order by tc.id desc
+    </select>
+</mapper>

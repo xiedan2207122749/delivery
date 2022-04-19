@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxyj.delivery.app.dao.OrderDetailDao">
+
+    <select id="getOrderDetail" resultType="com.jxyj.delivery.sys.vo.OrderDetailVO">
+        select
+            tod.id, tod.quantity, tod.unit, tod.price, tod.expense, tc.name commodityName, tc.introduce_image
+        from tb_order_detail tod
+        join tb_commodity tc on tc.id = tod.commodity_id
+        where tod.order_id = #{orderId}
+        order by tod.id desc
+    </select>
+
+    <select id="listExportOrderDetailData" resultType="com.jxyj.delivery.sys.bo.ExportOrderDetailBO">
+        select
+            tod.quantity, tod.unit, tcr.name customerName, date_format(tor.create_time, '%Y-%m-%d') createTime, tc.name commodityName
+        from tb_order_detail tod
+        join tb_commodity tc on tc.id = tod.commodity_id
+        join tb_order tor on tor.id = tod.order_id
+        join tb_customer tcr on tcr.id = tor.customer_id
+        where tor.id in
+        <foreach collection="array" item="item" close=")" open="(" separator=",">
+            #{item}
+        </foreach>
+        order by tod.id desc
+    </select>
+</mapper>

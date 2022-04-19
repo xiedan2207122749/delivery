@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxyj.delivery.app.dao.OrderDao">
+
+
+    <select id="pageOrder" resultType="com.jxyj.delivery.sys.vo.OrderVO">
+        select
+            con.id,
+           con.total_expense,
+           con.delivery_time,
+           con.remark,
+           con.status,
+           con.create_time,
+           tc.name customerName
+        from tb_order con
+        join tb_customer tc on tc.id = con.customer_id
+        <where>
+            con.deleted = 0
+            <if test="form.customerName != null and form.customerName.trim() != ''">
+                and tc.name like concat('%', #{form.customerName}, '%')
+            </if>
+            <if test="form.startCreateTime != null and form.startCreateTime.trim() != ''">
+                and con.create_time between #{form.startCreateTime} and #{form.endCreateTime}
+            </if>
+        </where>
+        order by con.id desc
+    </select>
+
+    <select id="getExportOrderData" resultType="com.jxyj.delivery.sys.vo.OrderVO">
+        select
+            con.id,
+            con.total_expense,
+            con.delivery_time,
+            con.remark,
+            con.status,
+            con.create_time,
+            tc.name customerName
+        from tb_order con
+                 join tb_customer tc on tc.id = con.customer_id
+        where con.id = #{id}
+    </select>
+</mapper>

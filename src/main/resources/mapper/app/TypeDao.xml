@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jxyj.delivery.app.dao.TypeDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.jxyj.delivery.app.entity.TypeEntity" id="commodityMap">
+        <result property="id" column="id"/>
+        <result property="value" column="name"/>
+        <result property="creatorUserId" column="creator_user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="listAllType" resultType="com.jxyj.delivery.sys.vo.TypeVO">
+        select tt.id, tt.value, tt.create_time, su.username
+        from tb_type tt
+        join sys_user su on su.id = tt.creator_user_id
+        where tt.deleted = 0
+        order by tt.id desc
+    </select>
+
+
+
+</mapper>
